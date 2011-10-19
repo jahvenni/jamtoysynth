@@ -4,4 +4,6 @@ add_executable(jamtoysynth
     main.cpp
     screen.cpp
     keys.cpp
+    touchlistener.cpp
+    simulator.cpp
     )

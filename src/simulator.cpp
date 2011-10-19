@@ -1,13 +1,13 @@
 #include "simulator.h"
 
-TuioCursor *tuio_cursor = NULL;
-TuioServer *tuio_server = NULL;
-TuioTime current_time;
+TUIO::TuioCursor *tuio_cursor = NULL;
+TUIO::TuioServer *tuio_server = NULL;
+TUIO::TuioTime current_time;
 
 void sim_init()
 {
-  tuio_server = new TuioServer();
-  current_time = TuioTime::getSessionTime();
+  tuio_server = new TUIO::TuioServer();
+  current_time = TUIO::TuioTime::getSessionTime();
 }
 void sim_quit()
 {
@@ -17,9 +17,10 @@ void sim_quit()
 
 void sim_init_frame()
 {
+
   if (tuio_server != NULL)
     {
-      current_time = TuioTime::getSessionTime();
+      current_time = TUIO::TuioTime::getSessionTime();
       tuio_server->initFrame(current_time);
     }
 }
@@ -40,7 +41,7 @@ void sim_mouse_pressed(float x, float y)
 void sim_mouse_dragged(float x, float y) 
 {
   if (tuio_cursor==NULL) return;
-  //	if (cursor->getTuioTime()==currentTime) return;
+  //	if (cursor->getTUIO::TuioTime()==currentTime) return;
   tuio_server->updateTuioCursor(tuio_cursor,x,y);
 }
 

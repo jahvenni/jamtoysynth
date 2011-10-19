@@ -1,17 +1,15 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "TUIO/TuioServer.h"
-#include "TUIO/TuioCursor.h"
-#include "SDL/SDL.h"
+#include <TUIO/TuioServer.h>
+#include <TUIO/TuioCursor.h>
 #include <list>
 #include <stdio.h>
 
-using namespace TUIO;
 
-extern TuioCursor *tuio_cursor;
-extern TuioServer *tuio_server;
-extern TuioTime current_time;
+extern TUIO::TuioCursor *tuio_cursor;
+extern TUIO::TuioServer *tuio_server;
+extern TUIO::TuioTime current_time;
 
 extern void sim_init();
 extern void sim_quit();

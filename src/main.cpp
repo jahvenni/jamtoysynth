@@ -7,9 +7,9 @@
 
 #include <TUIO/TuioClient.h>
 
-#include <touchlistener.hh>
+#include <touchlistener.h>
 #include <screen.h>
-//#include <simulator.h>
+#include <simulator.h>
 
 typedef struct audio_callback_userdata_t
 {
@@ -28,21 +28,24 @@ static int process_events()
   
   while( SDL_PollEvent( &event ) ) {
     switch( event.type ) {
-      /*    case SDL_MOUSEMOTION:
+    case SDL_MOUSEMOTION:
       if (event.button.button & SDL_BUTTON(1)) 
-	sim_mouse_dragged((float)event.button.x/width, (float)event.button.y/height);
+	sim_mouse_dragged((float)event.button.x/screen_width, (float)event.button.y/screen_height);
       break;
     case SDL_MOUSEBUTTONDOWN:
       if (event.button.button & SDL_BUTTON(1)) 
-	sim_mouse_pressed((float)event.button.x/width, (float)event.button.y/height);
+	sim_mouse_pressed((float)event.button.x/screen_width, (float)event.button.y/screen_height);
       break;
     case SDL_MOUSEBUTTONUP:
       if (event.button.button & SDL_BUTTON(1)) 
-	sim_mouse_released((float)event.button.x/width, (float)event.button.y/height);
-	break; */
+	sim_mouse_released((float)event.button.x/screen_width, (float)event.button.y/screen_height);
+      break;
     case SDL_KEYDOWN:
       if (event.key.keysym.sym == SDLK_ESCAPE)
 	return true;
+      break;
+    case SDL_QUIT:
+      return true;
       break;
     }
   }
@@ -55,9 +58,9 @@ static int main_loop()
 
   while(!quit)
     {
-      //sim_init_frame();
+      sim_init_frame();
       quit = process_events();
-      //sim_commit_frame();
+      sim_commit_frame();
       screen_render();
     }
   
@@ -103,6 +106,8 @@ int main(int argc, char *argv[])
         return -1;
     atexit(SDL_CloseAudio);
     audio_callback_userdata.audiospec = obtained_audio_spec;
+
+    sim_init();
 
     TouchListener client_listener;
     TUIO::TuioClient client;

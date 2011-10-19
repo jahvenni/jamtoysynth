@@ -1,16 +1,17 @@
-#include <touchlistener.hh>
+#include <touchlistener.h>
 
-void TouchListener::addTUIO::Object(TUIO::Object *tobj) {}
-void TouchListener::updateTUIO::Object(TUIO::Object *tobj) {}
-void TouchListener::removeTUIO::Object(TUIO::Object *tobj) {}
+void TouchListener::addTuioObject(TUIO::TuioObject *tobj) {}
+void TouchListener::updateTuioObject(TUIO::TuioObject *tobj) {}
+void TouchListener::removeTuioObject(TUIO::TuioObject *tobj) {}
 
-void TouchListener::addTUIO::Cursor(TUIO::Cursor *tcur) 
+void TouchListener::addTuioCursor(TUIO::TuioCursor *tcur) 
 {
   std::cout<<"Cursor added at "<<tcur->getX()<<" "<<tcur->getY()<<std::endl;
   int key = get_key_at(tcur->getX(), tcur->getY());
-  std::cout<<"Key "<<key<<" pressed"<<std::endl;
+  if (key >= 0)
+    std::cout<<"Key "<<key<<" pressed"<<std::endl;
 }
-void TouchListener::updateTUIO::Cursor(TUIO::Cursor *tcur) {}
-void TouchListener::removeTUIO::Cursor(TUIO::Cursor *tcur) {}
+void TouchListener::updateTuioCursor(TUIO::TuioCursor *tcur) {}
+void TouchListener::removeTuioCursor(TUIO::TuioCursor *tcur) {}
 
-void TouchListener::refresh(TUIO::Time frameTime) {}
+void TouchListener::refresh(TUIO::TuioTime frameTime) {}
