@@ -1,12 +1,15 @@
 #include "keys.h"
 #include "screen.h"
 
-static float keys_amt = 14;
+static const int white_keys_amt = 14; //Valkosten koskettimien määrä
+static bool keys_pressed[2 * white_keys_amt] { false }; //Tieto siitä, onko näppäintä painettu
 
-static float white_width() { return screen_width / keys_amt; }
+static float white_width() { return screen_width / white_keys_amt; }
 static float white_height() { return screen_height / 3; }
 static float black_width() { return white_width() * 0.5; }
 static float black_height() { return white_height() * 0.8; }
+
+
 
 void keys_render()
 {
@@ -15,35 +18,67 @@ void keys_render()
   glTranslatef(0, screen_height - white_height(), 0);
   glBegin(GL_QUADS);
 
+  int index = 0;
   //Piirretään valkoiset koskettimet
-  glColor3f(1.0, 1.0, 1.0);  
-  for (int n = 0; n < keys_amt; n++)
+  for (int n = 0; n < white_keys_amt; n++)
     {
+      if (!keys_pressed[index])
+	glColor3f(1.0, 1.0, 1.0);
+      else
+	glColor3f(1.0, 1.0, 0.3);
       glVertex3f(n * white_width() + 1, 0, 0);
       glVertex3f((n + 1) * white_width() - 1, 0, 0);
       glVertex3f((n + 1) * white_width() - 1, white_height(), 0);
       glVertex3f(n * white_width() + 1, white_height(), 0);
+      index+=2;
+      //      if ((n % 7) != 2  && (n % 7) != 6)
+      //	index++;
     }
 
+  index = 0;
   //Piirretään mustat koskettimet
-  glColor3f(0.0, 0.0, 0.0);
-  for (int n = 0; n < keys_amt; n++)
+  for (int n = 0; n < white_keys_amt; n++)
     {
+      index++;
       if ((n % 7) != 2  && (n % 7) != 6)
 	{
+	  if (!keys_pressed[index])
+	    glColor3f(0.0, 0.0, 0.0);
+	  else
+	    glColor3f(0.4, 0.4, 0.0);
 	  float x = (n + 1) * white_width() - black_width() / 2;
-
 	  glVertex3f(x, 0, 0);
 	  glVertex3f(x + black_width(), 0, 0);
 	  glVertex3f(x + black_width(), black_height(), 0);
 	  glVertex3f(x, black_height(), 0);
-	}	
+
+	}
+      index++;
     }
 
   glEnd();
   glPopMatrix();
 }
 
+void keys_press(unsigned int key)
+{
+  if (key < 2 * white_keys_amt)
+    keys_pressed[key] = true;
+}
+
+void keys_release()
+{
+  for (int n = 0; n < 2* white_keys_amt; n++)
+    {
+      keys_pressed[n] = false;
+    }
+}
+
+void keys_release(unsigned int key)
+{
+  if (key < 2 * white_keys_amt)
+    keys_pressed[key] = false;
+}
 
 /**
 Palauttaa annetussa pisteessä olevan koskettimen järjestysnumeron.

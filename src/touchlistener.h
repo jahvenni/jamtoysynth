@@ -6,11 +6,13 @@
 
 #include <screen.h>
 #include <iostream>
-
+#include <list>
 
 class TouchListener : public TUIO::TuioListener
 {
-public:
+ private:
+  std::list<TUIO::TuioCursor*> cursors;
+ public:
   void addTuioObject(TUIO::TuioObject *tobj);
   void updateTuioObject(TUIO::TuioObject *tobj);
   void removeTuioObject(TUIO::TuioObject *tobj);
