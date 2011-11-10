@@ -1,15 +1,19 @@
-#include "keys.h"
-#include "screen.h"
+#include <keys.h>
 
 static const int white_keys_amt = 14; //Valkosten koskettimien määrä
 static bool keys_pressed[2 * white_keys_amt] { false }; //Tieto siitä, onko näppäintä painettu
-
+static int octave = 5;
 static float white_width() { return screen_width / white_keys_amt; }
 static float white_height() { return screen_height / 3; }
 static float black_width() { return white_width() * 0.5; }
 static float black_height() { return white_height() * 0.8; }
 
+static synth_t* synth;
 
+void keys_init(synth_t *s)
+{
+  synth = s;
+}
 
 void keys_render()
 {
@@ -30,9 +34,9 @@ void keys_render()
       glVertex3f((n + 1) * white_width() - 1, 0, 0);
       glVertex3f((n + 1) * white_width() - 1, white_height(), 0);
       glVertex3f(n * white_width() + 1, white_height(), 0);
-      index+=2;
-      //      if ((n % 7) != 2  && (n % 7) != 6)
-      //	index++;
+      index++;
+      if ((n % 7) != 2  && (n % 7) != 6)
+      	index++;
     }
 
   index = 0;
@@ -51,9 +55,9 @@ void keys_render()
 	  glVertex3f(x + black_width(), 0, 0);
 	  glVertex3f(x + black_width(), black_height(), 0);
 	  glVertex3f(x, black_height(), 0);
-
+	  index++;
 	}
-      index++;
+
     }
 
   glEnd();
@@ -63,7 +67,10 @@ void keys_render()
 void keys_press(unsigned int key)
 {
   if (key < 2 * white_keys_amt)
-    keys_pressed[key] = true;
+    {
+      keys_pressed[key] = true;
+      synth_play_key(synth, key + octave * 12);
+    }
 }
 
 void keys_release()
@@ -72,12 +79,6 @@ void keys_release()
     {
       keys_pressed[n] = false;
     }
-}
-
-void keys_release(unsigned int key)
-{
-  if (key < 2 * white_keys_amt)
-    keys_pressed[key] = false;
 }
 
 /**
@@ -123,6 +124,14 @@ int get_key_at(float x, float y)
 	    result--;
 	}
     }
+
+
+
+  if (result % 14 / 13 >= 1)
+    result -= 2;
+  else if (result % 14 / 5 >= 1)
+    result -= 1;
+  result -= result / 14 * 2;
 
   return result;
 }

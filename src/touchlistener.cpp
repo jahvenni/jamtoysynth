@@ -6,6 +6,7 @@ void TouchListener::removeTuioObject(TUIO::TuioObject *tobj) {}
 void TouchListener::addTuioCursor(TUIO::TuioCursor *tcur) 
 {
   cursors.push_back(tcur);
+  std::cout<<"Key: "<<get_key_at(tcur->getX(), tcur->getY())<<std::endl;
 }
 
 void TouchListener::updateTuioCursor(TUIO::TuioCursor *tcur)

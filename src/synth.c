@@ -9,19 +9,20 @@ static float note_freq(int i)
     return (A / 32.0) * pow(2.0, (i - 9) / 12.0);
 }
 
+
 int synth_init(synth_t *synth, int sample_rate)
 {
     synth->sample_rate = sample_rate;
     memset(synth->instruments, 0, SYNTH_MAX_INSTRUMENTS * sizeof(instrument_t));
 
-    synth->instruments[0].freq = note_freq(60);
+    /*    synth->instruments[0].freq = note_freq(60);
     synth->instruments[0].amplitude = 0.3;
 
     synth->instruments[1].freq = note_freq(64);
     synth->instruments[1].amplitude = 0.3;
 
     synth->instruments[2].freq = note_freq(67);
-    synth->instruments[2].amplitude = 0.3;
+    synth->instruments[2].amplitude = 0.3;*/
 
     return 0;
 }
@@ -43,4 +44,16 @@ void synth_mix(synth_t *synth, float *left, float *right)
         instrument_play(instrument, synth->sample_rate, &l, &r);
         *left += l; *right += r;
     }
+}
+
+void synth_play_key(synth_t *synth, int i)
+{
+    synth->instruments[0].freq = note_freq(i);
+    synth->instruments[0].amplitude = 0.3;
+
+    /*    synth->instruments[1].freq = note_freq(i + 4);
+    synth->instruments[1].amplitude = 0.3;
+
+    synth->instruments[2].freq = note_freq(i + 7);
+    synth->instruments[2].amplitude = 0.3;*/
 }

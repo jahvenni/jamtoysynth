@@ -100,13 +100,13 @@ int main(int argc, char *argv[])
     atexit(SDL_CloseAudio);
 
     synth_t synth;
-
     synth_init(&synth, obtained_audio_spec.freq);
 
     audio_callback_userdata.synth = &synth;
     audio_callback_userdata.audiospec = obtained_audio_spec;
 
     sim_init();
+    keys_init(&synth);
 
     TouchListener client_listener;
     TUIO::TuioClient client;

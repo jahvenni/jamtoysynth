@@ -19,6 +19,7 @@ typedef struct synth_t
 int synth_init(synth_t *synth, int sample_rate);
 void synth_cleanup(synth_t *synth);
 void synth_mix(synth_t *synth, float *left, float *right);
+void synth_play_key(synth_t *synth, int i);
 
 #ifdef __cplusplus
 }
