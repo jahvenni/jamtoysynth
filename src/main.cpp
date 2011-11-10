@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <math.h>
 #include <assert.h>
 
 #include <SDL/SDL.h>
@@ -14,49 +15,77 @@
 #include <synth.h>
 #include <audio_output.h>
 
-static int process_events()
+
+static float note_freq(int i)
 {
-  SDL_Event event;
-  
-  while( SDL_PollEvent( &event ) ) {
-    switch( event.type ) {
-    case SDL_MOUSEMOTION:
-      if (event.button.button & SDL_BUTTON(1)) 
-	sim_mouse_dragged((float)event.button.x/screen_width, (float)event.button.y/screen_height);
-      break;
-    case SDL_MOUSEBUTTONDOWN:
-      if (event.button.button & SDL_BUTTON(1)) 
-	sim_mouse_pressed((float)event.button.x/screen_width, (float)event.button.y/screen_height);
-      break;
-    case SDL_MOUSEBUTTONUP:
-      if (event.button.button & SDL_BUTTON(1)) 
-	sim_mouse_released((float)event.button.x/screen_width, (float)event.button.y/screen_height);
-      break;
-    case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_ESCAPE)
-	return true;
-      break;
-    case SDL_QUIT:
-      return true;
-      break;
-    }
-  }
-  return false;
+    const float A = 440.0;
+    return (A / 32.0) * pow(2.0, (i - 9) / 12.0);
 }
 
-static int main_loop()
+static int main_loop(synth_t *synth)
 {
-  bool quit = false;
+    const SDLKey keyboard[] = {
+    //  c       c#      d       d#      e       f       f#      g       g#      a       a#      b       c       d       e
+        SDLK_z, SDLK_s, SDLK_x, SDLK_d, SDLK_c, SDLK_v, SDLK_g, SDLK_b, SDLK_h, SDLK_n, SDLK_j, SDLK_m, SDLK_COMMA, SDLK_l, SDLK_PERIOD,
+        SDLK_q, SDLK_2, SDLK_w, SDLK_3, SDLK_e, SDLK_r, SDLK_5, SDLK_t, SDLK_6, SDLK_y, SDLK_7, SDLK_u, SDLK_i, SDLK_9, SDLK_o, SDLK_0, SDLK_p
+    };
+    int notes[] = {
+    //  c       c#      d       d#      e       f       f#      g       g#      a       a#      b       c       d       e
+        0,      1,      2,      3,      4,      5,      6,      7,      8,      9,      10,     11,     12,     13,     14,
+        12,    13,     14,     15,     16,     17,     18,     19,     20,     21,      22,     23,     24,     25,     26,     27,     28,
+    };
 
-  while(!quit)
+    int num_keys = sizeof(keyboard)/sizeof(*keyboard);
+    int base_octave = 4;
+
+    bool quit = false;
+    while(!quit)
     {
-      sim_init_frame();
-      quit = process_events();
-      sim_commit_frame();
-      screen_render();
-    }
-  
-  return 0;
+        const float background[] = { 0.2, 0.4, 0.7, 1.0 };
+
+	sim_init_frame();
+
+        SDL_Event event;
+        while(SDL_PollEvent(&event))
+        {
+	  switch( event.type ) {
+	  case SDL_MOUSEMOTION:
+	    if (event.button.button & SDL_BUTTON(1)) 
+	      sim_mouse_dragged((float)event.button.x/screen_width, (float)event.button.y/screen_height);
+	    break;
+	  case SDL_MOUSEBUTTONDOWN:
+	    if (event.button.button & SDL_BUTTON(1)) 
+	      sim_mouse_pressed((float)event.button.x/screen_width, (float)event.button.y/screen_height);
+	    break;
+	  case SDL_MOUSEBUTTONUP:
+	    if (event.button.button & SDL_BUTTON(1)) 
+	      sim_mouse_released((float)event.button.x/screen_width, (float)event.button.y/screen_height);
+	    break;
+	  case SDL_KEYDOWN:
+	    if (event.key.keysym.sym == SDLK_ESCAPE)
+	      quit = true;
+            else if(event.type == SDL_KEYDOWN && event.key.keysym.sym >= SDLK_F1 && event.key.keysym.sym <= SDLK_F12)
+	      base_octave = event.key.keysym.sym - SDLK_F1;
+	    
+	    for(int i = 0; i < num_keys; ++i)
+	      {
+		if(keyboard[i] != event.key.keysym.sym) continue;
+		
+		SDL_LockAudio();
+		synth->instruments->carrier.freq = note_freq(base_octave * 12 + notes[i]);
+		adsr_trigger(&synth->instruments[0].adsr);
+		SDL_UnlockAudio();
+	      }
+	    break;
+	  case SDL_QUIT:
+	    quit = true;
+	    break;
+	  }
+        }
+	sim_commit_frame();
+	screen_render();
+    } 
+ return 0;
 }
 
 
@@ -115,8 +144,9 @@ int main(int argc, char *argv[])
 
     SDL_PauseAudio(0);
 
-    int err = main_loop();
-    
+
+    int err = main_loop(&synth);
+
     SDL_PauseAudio(1);
 
     synth_cleanup(&synth);

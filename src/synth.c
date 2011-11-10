@@ -9,20 +9,25 @@ static float note_freq(int i)
     return (A / 32.0) * pow(2.0, (i - 9) / 12.0);
 }
 
-
 int synth_init(synth_t *synth, int sample_rate)
 {
+    memset(synth, 0, sizeof(synth_t));
     synth->sample_rate = sample_rate;
-    memset(synth->instruments, 0, SYNTH_MAX_INSTRUMENTS * sizeof(instrument_t));
 
-    /*    synth->instruments[0].freq = note_freq(60);
-    synth->instruments[0].amplitude = 0.3;
+    for(instrument_t *instrument = synth->instruments;
+        instrument != synth->instruments + SYNTH_MAX_INSTRUMENTS;
+        ++instrument)
+    {
+        instrument->modulation = MODULATION_FREQUENCY;
+        instrument->carrier.waveform = OSCILLATOR_TRIANGLE;
+        instrument->carrier.amplitude = 0.7;
+        instrument->modulator.waveform = OSCILLATOR_SINE;
+        instrument->modulator.freq = 2.0;
+        instrument->modulator.amplitude = 0.6;
 
-    synth->instruments[1].freq = note_freq(64);
-    synth->instruments[1].amplitude = 0.3;
-
-    synth->instruments[2].freq = note_freq(67);
-    synth->instruments[2].amplitude = 0.3;*/
+        adsr_set(&instrument->adsr, sample_rate, 0.1, 1.0, 0.7, 1.5);
+        filter_set(&instrument->filter, sample_rate, FILTER_LOWPASS, 500, 0.5, 0.5);
+    }
 
     return 0;
 }
@@ -48,12 +53,8 @@ void synth_mix(synth_t *synth, float *left, float *right)
 
 void synth_play_key(synth_t *synth, int i)
 {
-    synth->instruments[0].freq = note_freq(i);
-    synth->instruments[0].amplitude = 0.3;
-
-    /*    synth->instruments[1].freq = note_freq(i + 4);
-    synth->instruments[1].amplitude = 0.3;
-
-    synth->instruments[2].freq = note_freq(i + 7);
-    synth->instruments[2].amplitude = 0.3;*/
+  SDL_LockAudio();
+  synth->instruments->carrier.freq = note_freq(i);
+  adsr_trigger(&synth->instruments[0].adsr);
+  SDL_UnlockAudio();
 }
