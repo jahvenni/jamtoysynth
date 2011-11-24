@@ -1,7 +1,7 @@
 #include <keys.h>
 
 static const int white_keys_amt = 14; //Valkosten koskettimien määrä
-static bool keys_pressed[2 * white_keys_amt] { false }; //Tieto siitä, onko näppäintä painettu
+static bool keys_pressed[2 * white_keys_amt] = { false }; //Tieto siitä, onko näppäintä painettu
 static int octave = 5;
 static float white_width() { return screen_width / white_keys_amt; }
 static float white_height() { return screen_height / 3; }

@@ -6,7 +6,7 @@
 #include <GL/glu.h>
 
 #include <keys.h>
-
+#include <pots.h>
 extern SDL_Surface *window;
 
 extern int screen_width;

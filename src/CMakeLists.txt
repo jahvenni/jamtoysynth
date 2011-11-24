@@ -6,6 +6,7 @@ add_executable(jamtoysynth
     keys.cpp
     touchlistener.cpp
     simulator.cpp
+    pots.cpp
     synth.c
     instrument.c
     audio_output.c
