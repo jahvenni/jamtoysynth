@@ -31,7 +31,7 @@ int synth_init(synth_t *synth, int sample_rate)
         controls->release = 1.5;
 
         controls->filter = FILTER_LOWPASS;
-        controls->filter_freq = 500.0;
+        controls->filter_freq = 0.5;
         controls->filter_resonance = 0.5;
         controls->filter_gain = 0.5;
     }

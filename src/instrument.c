@@ -206,11 +206,13 @@ void instrument_control(instrument_t *instrument, const instrument_control_t *co
         control->sustain,
         control->release);
 
+    float resonance = control->filter_resonance;
+    if (resonance == 0.0) resonance = 0.00001;
     filter_set(&instrument->filter,
         sample_rate,
         control->filter,
-        control->filter_freq,
-        control->filter_resonance,
+        control->filter_freq * 1000.0 + 50.0,
+        resonance,
         control->filter_gain);
 }
 

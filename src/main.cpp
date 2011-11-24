@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
 
     sim_init();
     keys_init(&synth);
+    pots_init(&(synth.controls[0]));
 
     TouchListener client_listener;
     TUIO::TuioClient client;
