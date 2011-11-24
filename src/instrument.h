@@ -62,7 +62,7 @@ typedef struct filter_t
 
 typedef enum filter_type_t
 {
-    FILTER_NONE,
+    FILTER_NONE = 0,
     FILTER_LOWPASS,
     FILTER_HIGHPASS,
     FILTER_BANDPASS,
@@ -75,6 +75,20 @@ typedef enum filter_type_t
 void filter_set(filter_t *filter, int sample_rate, filter_type_t type, float f0, float Q, float dBgain);
 float filter(const filter_t *filter, filter_state_t *state, float sample);
 
+typedef struct instrument_control_t
+{
+    modulation_t modulation;
+    oscillator_waveform_t carrier;
+    float carrier_amplitude;
+    oscillator_waveform_t modulator;
+    float modulator_amplitude, modulator_freq;
+
+    float attack, decay, sustain, release;
+
+    filter_type_t filter;
+    float filter_freq, filter_resonance, filter_gain;
+} instrument_control_t;
+
 typedef struct instrument_t
 {
     modulation_t modulation;
@@ -85,6 +99,7 @@ typedef struct instrument_t
     filter_state_t filter0, filter1;
 } instrument_t;
 
+void instrument_control(instrument_t *instrument, const instrument_control_t *control, int sample_rate);
 void instrument_play(instrument_t *instrument, int sample_rate, float *left, float *right);
 
 #ifdef __cplusplus

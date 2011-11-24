@@ -6,7 +6,7 @@ static std::list<pot_t> pots;
 
 void pots_init(instrument_t* instrument)
 {
-  pot_t pot1 = { instrument-> };
+  pot_t pot1 = { NULL };
   pots.push_back(pot1);
   pot_t pot2 = { NULL };
   pots.push_back(pot2);
