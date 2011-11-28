@@ -14,6 +14,7 @@ int screen_init()
   }
   
 
+
   glViewport(0, 0, screen_width, screen_height);
   glMatrixMode(GL_PROJECTION);	
   glLoadIdentity();
@@ -22,6 +23,7 @@ int screen_init()
   glLoadIdentity();
   SDL_WM_SetCaption("Jamtoysynth", NULL);
 
+  text_init();
   return 0;
 }
 
@@ -34,6 +36,7 @@ void screen_render()
   glLoadIdentity();
   keys_render();
   pots_render();
+
   SDL_GL_SwapBuffers();
 }
 

@@ -17,7 +17,8 @@ void keys_init(synth_t *s)
 
 void keys_render()
 {
-  
+  glDisable( GL_TEXTURE_2D );  
+  //  glDisable( GL_BLEND);
   glPushMatrix();
   glTranslatef(0, screen_height - white_height(), 0);
   glBegin(GL_QUADS);

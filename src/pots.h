@@ -10,6 +10,7 @@
 typedef struct pot_t {
   float *value;
   float x, y;
+  char *name;
 } pot_t;
 
 //Create new pot

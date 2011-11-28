@@ -88,7 +88,6 @@ static int main_loop(synth_t *synth)
  return 0;
 }
 
-
 int main(int argc, char *argv[])
 {
     (void)argc;
@@ -107,6 +106,8 @@ int main(int argc, char *argv[])
     //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
     SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+
+    
 
     if (screen_init() != 0)
       return -1;

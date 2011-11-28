@@ -7,6 +7,7 @@
 
 #include <keys.h>
 #include <pots.h>
+#include <text.h>
 extern SDL_Surface *window;
 
 extern int screen_width;

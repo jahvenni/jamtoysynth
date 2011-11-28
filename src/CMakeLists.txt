@@ -10,4 +10,5 @@ add_executable(jamtoysynth
     synth.c
     instrument.c
     audio_output.c
+    text.c
     )
