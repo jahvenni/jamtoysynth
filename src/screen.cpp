@@ -1,7 +1,7 @@
 #include <screen.h>
 
 SDL_Surface *window;
-int screen_width = 1024;
+int screen_width = 800;
 int screen_height = 600;
 
 int screen_init()
